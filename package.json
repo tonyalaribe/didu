@@ -23,7 +23,6 @@
 		"localforage": "^1.5.5",
 		"mithril": "^1.1.6",
 		"slideout": "^1.0.1",
-		"sw-toolbox": "^3.6.0",
 		"workbox-sw": "^2.1.2"
 	},
 	"devDependencies": {
