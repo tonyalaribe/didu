@@ -1,0 +1,4 @@
+:2010 {
+  root public
+  rewrite { to {path} {path}/ /index.html }
+}
