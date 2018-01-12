@@ -32,7 +32,7 @@ export var Head = {
 				</div>
 				<div class="dib pa2">
 					<a class="link white" oncreate={m.route.link} href="/">
-						did u
+						DIDU
 					</a>
 				</div>
 				<div class="dib pa2 fr ">i</div>

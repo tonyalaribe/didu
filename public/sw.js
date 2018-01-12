@@ -5,34 +5,37 @@ importScripts('https://unpkg.com/workbox-sw@2.0.3/build/importScripts/workbox-sw
 
 // Note: Ignore the error that Glitch raises about WorkboxSW being undefined.
 const workbox = new WorkboxSW({
-  skipWaiting: true,
+  // skipWaiting: true,
   clientsClaim: true
 });
 
 
-// workbox.router.registerRoute(
-//   new RegExp('^https://hacker-news.firebaseio.com'),
-//   workbox.strategies.staleWhileRevalidate()
-// );
+workbox.router.registerNavigationRoute('index.html', {
+  whitelist: [/./],
+  blacklist: [],
+});
+//
+
+workbox.router.registerRoute(
+  'https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css',
+  workbox.strategies.cacheFirst({
+    cacheName: 'css',
+    cacheExpiration: {
+      maxEntries: 2,
+      maxAgeSeconds: 7 * 24 * 60 * 60,
+    },
+    cacheableResponse: {statuses: [0, 200]},
+  }),
+);
 
 console.log(workbox)
 workbox.router.registerRoute(
  /\.(?:js|css)$/,
- workbox.strategies.staleWhileRevalidate(),
+ workbox.strategies.networkFirst({networkTimeoutSeconds: 2})
 );
 
 
-workbox.router.registerRoute(
- /\.(?:png|gif|jpg|jpeg|svg)$/,
- workbox.strategies.cacheFirst({
-   cacheName: 'images',
-   cacheExpiration: {
-     maxEntries: 2,
-     maxAgeSeconds: 7 * 24 * 60 * 60,
-   },
-   cacheableResponse: {statuses: [0, 200]},
- }),
-);
+
 
 // self.addEventListener('push', (event) => {
 //   const title = 'Get Started With Workbox';
@@ -80,3 +83,16 @@ workbox.precache([
     "revision": "7542fdb91e3082514c8c6807dbc1ea67"
   }
 ]);
+
+
+// workbox.router.registerRoute(
+//  /\.(?:png|gif|jpg|jpeg|svg)$/,
+//  workbox.strategies.cacheFirst({
+//    cacheName: 'images',
+//    cacheExpiration: {
+//      maxEntries: 10,
+//      maxAgeSeconds: 7 * 24 * 60 * 60,
+//    },
+//    cacheableResponse: {statuses: [0, 200]},
+//  }),
+// );
