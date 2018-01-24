@@ -1,5 +1,4 @@
 import m from "mithril";
-import { Menu } from "../models/menu.js";
 import Slideout from "slideout";
 
 import cn from "classnames";

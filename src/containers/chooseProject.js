@@ -1,12 +1,17 @@
 import m from "mithril";
 import cn from "classnames";
+import { Data } from "../models/data.js";
 
 export var ListItem = {
 	view: function(vnode) {
 		console.log(vnode);
-		let { active } = vnode.attrs;
+		let { active, project } = vnode.attrs;
 		return (
-			<a class="db white-80 link " oncreate={m.route.link} href="/question_page">
+			<a
+				class="db white-80 link "
+				oncreate={m.route.link}
+				href="/question_page"
+			>
 				<div class="bt bb b--white">
 					<div
 						class={cn("w-70 dib  pa4 ", {
@@ -14,7 +19,7 @@ export var ListItem = {
 							"bg-dark-red": active
 						})}
 					>
-						<span>Nouvelle voie</span>
+						<span>{project.project_name}</span>
 					</div>
 					<span
 						class={cn("dark-red  absolute frx pt4 ", {
@@ -27,7 +32,7 @@ export var ListItem = {
 					</span>
 
 					<div class="w-30 dib pv4 tc">
-						<span>Statut: 85%</span>
+						<span>Statut: {parseFloat(project.overall_progress) * 100}%</span>
 					</div>
 				</div>
 			</a>
@@ -36,6 +41,9 @@ export var ListItem = {
 };
 
 export var ChooseProject = {
+	oncreate: function() {
+		Data.GetProjects();
+	},
 	view: function() {
 		return (
 			<section>
@@ -45,10 +53,14 @@ export var ChooseProject = {
 					</span>
 				</div>
 				<section>
-					<ListItem />
-					<ListItem active />
-					<ListItem />
-					<ListItem />
+					{Data.Projects.map(
+						(project, i) =>
+							parseInt(project.section, 10) > 1 ? (
+								""
+							) : (
+								<ListItem project={project} key={i} />
+							)
+					)}
 				</section>
 			</section>
 		);
