@@ -10,7 +10,7 @@ export var ListItem = {
 			<a
 				class="db white-80 link "
 				oncreate={m.route.link}
-				href="/question_page"
+				href={`/question_page/${project.project_id}`}
 			>
 				<div class="bt bb b--white">
 					<div

@@ -1,6 +1,6 @@
 import m from "mithril";
 import Slideout from "slideout";
-
+import {Data} from "../models/data.js";
 import cn from "classnames";
 
 export var Head = {
@@ -51,26 +51,7 @@ export var SideBar = {
 		);
 	}
 };
-export var Foot = {
-	view: function() {
-		return (
-			<div class="fixed bottom-0 w-100 red bg-dark-gray shadow-4 bt b--white-50">
-				<div class="dib w-33 pa3 tc br b--white-50 tc">
-					<img src="/assets/img/check.svg" class="w2 dib" />
-					<span class="db">Ajouter</span>
-				</div>
-				<div class="dib w-33 pa3 tc  br b--white-50 tc">
-					<img src="/assets/img/plus.svg" class="w2 dib" />
-					<span class="db">Sauver</span>
-				</div>
-				<div class="dib w-33 pa3 tc tc">
-					<img src="/assets/img/close.svg" class="w2 dib" />
-					<span class="db">Annuler</span>
-				</div>
-			</div>
-		);
-	}
-};
+
 
 export var Shell = {
 	view: function({ state, children }) {
@@ -83,7 +64,6 @@ export var Shell = {
 				>
 					<Head />
 					{children}
-					<Foot />
 				</section>
 			</section>
 		);

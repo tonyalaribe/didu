@@ -1,30 +1,89 @@
 import m from "mithril";
 
-const ROOT = `http://www.diduapp.com/m`
+const ROOT = `http://www.diduapp.com/m`;
 
 export var Data = {
-  Projects:[],
-  Tasks:[],
-  GetProjects:function(){
-    return m
+	Projects: [],
+	Tasks: [],
+	CurrentTaskIndex: 0,
+  TotalTaskItems:0,
+	TaskAnswers: {},
+	GetProjects: function() {
+		return m
 			.request({
 				method: "GET",
-				url: `${ROOT}/projects.php`,
+				url: `${ROOT}/projects.php`
 			})
 			.then(function(response) {
-				console.table("projects response: ", response);
-        Data.Projects = response;
+				console.table(response);
+				Data.Projects = response;
 			});
-  },
-  GetTasks:function(project_id, project_type){
-    return m
-      .request({
-        method: "GET",
-        url: `${ROOT}/tasks.php?project_id=${project_id}&project_type=${project_type}`,
-      })
-      .then(function(response) {
-        console.table("projects response: ", response);
-        Data.Tasks = response;
-      });
-  }
+	},
+	GetTasks: function(project_id) {
+		console.log(project_id);
+		return m
+			.request({
+				method: "GET",
+				url: `${ROOT}/tasks.php?project_id=${project_id}`
+			})
+			.then(function(response) {
+				console.log(response);
+				console.table(response);
+				Data.Tasks = response;
+				// Data.TaskAnswers = {};
+			});
+	},
+	TasksSaveAnswer: function(project_id) {
+		console.log(Data.CurrentTaskIndex);
+		Data.CurrentTaskIndex++;
+		console.log(Data.CurrentTaskIndex);
+    if (Data.CurrentTaskIndex >= Data.TotalTaskItems){
+      m.route.set(`/question_page/${project_id}/completed`)
+    }
+		m.redraw();
+	},
+	TaskSetBoolAnswer: function(task_id, answer) {
+		if (Data.TaskAnswers[task_id]) {
+			Data.TaskAnswers[task_id].yes_or_no = answer;
+		} else {
+			Data.TaskAnswers[task_id] = {
+				yes_or_no: answer
+			};
+		}
+
+		console.log(Data.TaskAnswers);
+    m.redraw();
+	},
+	TaskSetCustomAnswer: function(task_id, answer) {
+		if (Data.TaskAnswers[task_id]) {
+			Data.TaskAnswers[task_id].answer = answer;
+		} else {
+			Data.TaskAnswers[task_id] = {
+				answer: answer
+			};
+		}
+
+		console.log(Data.TaskAnswers);
+    m.redraw();
+	},
+
+	TaskSetUploadedImage: function(task_id, image) {
+		if (Data.TaskAnswers[task_id]) {
+			Data.TaskAnswers[task_id].image = image;
+		} else {
+			Data.TaskAnswers[task_id] = {
+				image: image
+			};
+		}
+
+		console.log(Data.TaskAnswers);
+    m.redraw();
+	},
+	GetTaskAnswer: function(task_id) {
+		if (Data.TaskAnswers[task_id]) {
+			return Data.TaskAnswers[task_id];
+		} else {
+			return {};
+		}
+	}
 };

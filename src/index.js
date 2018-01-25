@@ -10,23 +10,23 @@ m.route.prefix("");
 
 m.route(root, "/", {
 	"/": {
-		view: () => (
+		view: ({attrs}) => (
 			<Shell>
-				<ChooseProject />
+				<ChooseProject {...attrs}/>
 			</Shell>
 		)
 	},
-  "/question_page": {
-		view: () => (
+  "/question_page/:project_id": {
+		view: ({attrs}) => (
 			<Shell>
-				<QuestionPage />
+				<QuestionPage {...attrs}/>
 			</Shell>
 		)
 	},
-  "/completed": {
-		view: () => (
+  "/question_page/:project_id/completed": {
+		view: ({attrs}) => (
 			<Shell>
-				<Completed />
+				<Completed {...attrs}/>
 			</Shell>
 		)
 	}
