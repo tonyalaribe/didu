@@ -1,6 +1,6 @@
 import m from "mithril";
 import Slideout from "slideout";
-import {Data} from "../models/data.js";
+import { Data } from "../models/data.js";
 import cn from "classnames";
 
 export var Head = {
@@ -51,7 +51,6 @@ export var SideBar = {
 		);
 	}
 };
-
 
 export var Shell = {
 	view: function({ state, children }) {

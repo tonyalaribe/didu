@@ -6,7 +6,7 @@ export var Data = {
 	Projects: [],
 	Tasks: [],
 	CurrentTaskIndex: 0,
-  TotalTaskItems:0,
+	TotalTaskItems: 0,
 	TaskAnswers: {},
 	GetProjects: function() {
 		return m
@@ -37,9 +37,9 @@ export var Data = {
 		console.log(Data.CurrentTaskIndex);
 		Data.CurrentTaskIndex++;
 		console.log(Data.CurrentTaskIndex);
-    if (Data.CurrentTaskIndex >= Data.TotalTaskItems){
-      m.route.set(`/question_page/${project_id}/completed`)
-    }
+		if (Data.CurrentTaskIndex >= Data.TotalTaskItems) {
+			m.route.set(`/question_page/${project_id}/completed`);
+		}
 		m.redraw();
 	},
 	TaskSetBoolAnswer: function(task_id, answer) {
@@ -52,19 +52,26 @@ export var Data = {
 		}
 
 		console.log(Data.TaskAnswers);
-    m.redraw();
+		m.redraw();
 	},
-	TaskSetCustomAnswer: function(task_id, answer) {
+	TaskSetCustomAnswer: function(data, ans) {
+		let task_id = data.task_id;
+		let answer = parseFloat(ans);
 		if (Data.TaskAnswers[task_id]) {
-			Data.TaskAnswers[task_id].answer = answer;
+			Data.TaskAnswers[task_id].progress = answer;
 		} else {
 			Data.TaskAnswers[task_id] = {
-				answer: answer
+				progress: answer
 			};
 		}
 
+		Data.TaskAnswers[task_id].current_cumulative_value =
+			parseFloat(data.current_cumulative_value) + parseFloat(answer);
+		Data.TaskAnswers[task_id].progress_rate =
+			parseFloat(data.current_cumulative_value) / parseFloat(data.target_value);
+
 		console.log(Data.TaskAnswers);
-    m.redraw();
+		m.redraw();
 	},
 
 	TaskSetUploadedImage: function(task_id, image) {
@@ -77,7 +84,7 @@ export var Data = {
 		}
 
 		console.log(Data.TaskAnswers);
-    m.redraw();
+		m.redraw();
 	},
 	GetTaskAnswer: function(task_id) {
 		if (Data.TaskAnswers[task_id]) {
@@ -85,5 +92,22 @@ export var Data = {
 		} else {
 			return {};
 		}
+	},
+	GetProjectStatus: function() {
+		let total_percentages = 0;
+		if (Object.keys(Data.TaskAnswers).length > 0) {
+			total_percentages = Object.values(Data.TaskAnswers).reduce(
+				(previous, data) => {
+					console.log(previous);
+					console.log(previous, data);
+					return (previous += data.progress_rate);
+				},
+				0
+			);
+		}
+
+		console.log(total_percentages);
+		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
+		return parseInt(total_percentages / Data.TotalTaskItems, 10);
 	}
 };

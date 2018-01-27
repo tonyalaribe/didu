@@ -132,11 +132,11 @@ export var QuestionPage = {
 									</div>
 									<div>
 										<input
-											type="text"
+											type="number"
 											class="pa4 bg-dark-gray bt bb b--white tc w-100 white-90"
-											placeholder="answer eg. 5000m2"
+											placeholder="progress today eg. 5000"
 											onchange={m.withAttr("value", v =>
-												Data.TaskSetCustomAnswer(data.task_id, v)
+												Data.TaskSetCustomAnswer(data, v)
 											)}
 										/>
 									</div>

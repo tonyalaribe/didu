@@ -1,7 +1,12 @@
 import m from "mithril";
+import {Data} from "../models/data.js";
 
 export var Completed = {
+	oncreate:function(){
+
+	},
 	view: function() {
+		let status = Data.GetProjectStatus()
 		return (
 			<section>
 				<div class="bg-light-blue pa4 tc">
@@ -11,13 +16,16 @@ export var Completed = {
 				</div>
 				<section>
 					<div class="pa4 bg-dark-gray bt bb b--white tc f2 dark-red">
-						<span>STATUT: 85%</span>
+						<span>STATUT: {status?status:0}%</span>
 					</div>
-					<a class="db link  pa4 bg-dark-red bt bb b--white tc ">
+					<a class="db link  pa4 bg-dark-red bt bb b--white tc mv2">
 						<span>Envoie des données collectées</span>
 					</a>
-					<a class="db link pa4 bg-gray bt bb b--white tc ">
+					<a class="dn link pa4 bg-gray bt bb b--white tc ">
 						<span>Modifier les résponses</span>
+					</a>
+					<a class="db link pa4 bg-gray bt bb b--white tc mv2 white-90" oncreate={m.route.link} href="/">
+						<span>Back to List</span>
 					</a>
 				</section>
 			</section>

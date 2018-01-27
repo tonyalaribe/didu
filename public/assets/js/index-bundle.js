@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1324,10 +1324,131 @@ m.vnode = Vnode
 if (true) module["exports"] = m
 else window.m = m
 }());
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4).setImmediate, __webpack_require__(1)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5).setImmediate, __webpack_require__(2)))
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.Data = undefined;
+
+var _mithril = __webpack_require__(0);
+
+var _mithril2 = _interopRequireDefault(_mithril);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ROOT = "http://www.diduapp.com/m";
+
+var Data = exports.Data = {
+	Projects: [],
+	Tasks: [],
+	CurrentTaskIndex: 0,
+	TotalTaskItems: 0,
+	TaskAnswers: {},
+	GetProjects: function GetProjects() {
+		return _mithril2.default.request({
+			method: "GET",
+			url: ROOT + "/projects.php"
+		}).then(function (response) {
+			console.table(response);
+			Data.Projects = response;
+		});
+	},
+	GetTasks: function GetTasks(project_id) {
+		console.log(project_id);
+		return _mithril2.default.request({
+			method: "GET",
+			url: ROOT + "/tasks.php?project_id=" + project_id
+		}).then(function (response) {
+			console.log(response);
+			console.table(response);
+			Data.Tasks = response;
+			// Data.TaskAnswers = {};
+		});
+	},
+	TasksSaveAnswer: function TasksSaveAnswer(project_id) {
+		console.log(Data.CurrentTaskIndex);
+		Data.CurrentTaskIndex++;
+		console.log(Data.CurrentTaskIndex);
+		if (Data.CurrentTaskIndex >= Data.TotalTaskItems) {
+			_mithril2.default.route.set("/question_page/" + project_id + "/completed");
+		}
+		_mithril2.default.redraw();
+	},
+	TaskSetBoolAnswer: function TaskSetBoolAnswer(task_id, answer) {
+		if (Data.TaskAnswers[task_id]) {
+			Data.TaskAnswers[task_id].yes_or_no = answer;
+		} else {
+			Data.TaskAnswers[task_id] = {
+				yes_or_no: answer
+			};
+		}
+
+		console.log(Data.TaskAnswers);
+		_mithril2.default.redraw();
+	},
+	TaskSetCustomAnswer: function TaskSetCustomAnswer(data, ans) {
+		var task_id = data.task_id;
+		var answer = parseFloat(ans);
+		if (Data.TaskAnswers[task_id]) {
+			Data.TaskAnswers[task_id].progress = answer;
+		} else {
+			Data.TaskAnswers[task_id] = {
+				progress: answer
+			};
+		}
+
+		Data.TaskAnswers[task_id].current_cumulative_value = parseFloat(data.current_cumulative_value) + parseFloat(answer);
+		Data.TaskAnswers[task_id].progress_rate = parseFloat(data.current_cumulative_value) / parseFloat(data.target_value);
+
+		console.log(Data.TaskAnswers);
+		_mithril2.default.redraw();
+	},
+
+	TaskSetUploadedImage: function TaskSetUploadedImage(task_id, image) {
+		if (Data.TaskAnswers[task_id]) {
+			Data.TaskAnswers[task_id].image = image;
+		} else {
+			Data.TaskAnswers[task_id] = {
+				image: image
+			};
+		}
+
+		console.log(Data.TaskAnswers);
+		_mithril2.default.redraw();
+	},
+	GetTaskAnswer: function GetTaskAnswer(task_id) {
+		if (Data.TaskAnswers[task_id]) {
+			return Data.TaskAnswers[task_id];
+		} else {
+			return {};
+		}
+	},
+	GetProjectStatus: function GetProjectStatus() {
+		var total_percentages = 0;
+		if (Object.keys(Data.TaskAnswers).length > 0) {
+			total_percentages = Object.values(Data.TaskAnswers).reduce(function (previous, data) {
+				console.log(previous);
+				console.log(previous, data);
+				return previous += data.progress_rate;
+			}, 0);
+		}
+
+		console.log(total_percentages);
+		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
+		return parseInt(total_percentages / Data.TotalTaskItems, 10);
+	}
+};
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1354,7 +1475,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1409,7 +1530,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1419,9 +1540,9 @@ var _mithril = __webpack_require__(0);
 
 var _mithril2 = _interopRequireDefault(_mithril);
 
-var _shell = __webpack_require__(7);
+var _shell = __webpack_require__(8);
 
-var _chooseProject = __webpack_require__(11);
+var _chooseProject = __webpack_require__(12);
 
 var _questionPage = __webpack_require__(13);
 
@@ -1467,7 +1588,7 @@ _mithril2.default.route(root, "/", {
 });
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var apply = Function.prototype.apply;
@@ -1520,13 +1641,13 @@ exports._unrefActive = exports.active = function(item) {
 };
 
 // setimmediate attaches itself to the global object
-__webpack_require__(5);
+__webpack_require__(6);
 exports.setImmediate = setImmediate;
 exports.clearImmediate = clearImmediate;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
@@ -1716,10 +1837,10 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(7)))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -1909,7 +2030,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1924,13 +2045,13 @@ var _mithril = __webpack_require__(0);
 
 var _mithril2 = _interopRequireDefault(_mithril);
 
-var _slideout = __webpack_require__(8);
+var _slideout = __webpack_require__(9);
 
 var _slideout2 = _interopRequireDefault(_slideout);
 
-var _data = __webpack_require__(12);
+var _data = __webpack_require__(1);
 
-var _classnames = __webpack_require__(2);
+var _classnames = __webpack_require__(3);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -2028,7 +2149,7 @@ var Shell = exports.Shell = {
 };
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2037,8 +2158,8 @@ var Shell = exports.Shell = {
 /**
  * Module dependencies
  */
-var decouple = __webpack_require__(9);
-var Emitter = __webpack_require__(10);
+var decouple = __webpack_require__(10);
+var Emitter = __webpack_require__(11);
 
 /**
  * Privates
@@ -2381,7 +2502,7 @@ module.exports = Slideout;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2428,7 +2549,7 @@ module.exports = decouple;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2587,7 +2708,7 @@ exports["default"] = Emitter;
 module.exports = exports["default"];
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2602,11 +2723,11 @@ var _mithril = __webpack_require__(0);
 
 var _mithril2 = _interopRequireDefault(_mithril);
 
-var _classnames = __webpack_require__(2);
+var _classnames = __webpack_require__(3);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
-var _data = __webpack_require__(12);
+var _data = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2697,108 +2818,6 @@ var ChooseProject = exports.ChooseProject = {
 };
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.Data = undefined;
-
-var _mithril = __webpack_require__(0);
-
-var _mithril2 = _interopRequireDefault(_mithril);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var ROOT = "http://www.diduapp.com/m";
-
-var Data = exports.Data = {
-	Projects: [],
-	Tasks: [],
-	CurrentTaskIndex: 0,
-	TotalTaskItems: 0,
-	TaskAnswers: {},
-	GetProjects: function GetProjects() {
-		return _mithril2.default.request({
-			method: "GET",
-			url: ROOT + "/projects.php"
-		}).then(function (response) {
-			console.table(response);
-			Data.Projects = response;
-		});
-	},
-	GetTasks: function GetTasks(project_id) {
-		console.log(project_id);
-		return _mithril2.default.request({
-			method: "GET",
-			url: ROOT + "/tasks.php?project_id=" + project_id
-		}).then(function (response) {
-			console.log(response);
-			console.table(response);
-			Data.Tasks = response;
-			// Data.TaskAnswers = {};
-		});
-	},
-	TasksSaveAnswer: function TasksSaveAnswer(project_id) {
-		console.log(Data.CurrentTaskIndex);
-		Data.CurrentTaskIndex++;
-		console.log(Data.CurrentTaskIndex);
-		if (Data.CurrentTaskIndex >= Data.TotalTaskItems) {
-			_mithril2.default.route.set("/question_page/" + project_id + "/completed");
-		}
-		_mithril2.default.redraw();
-	},
-	TaskSetBoolAnswer: function TaskSetBoolAnswer(task_id, answer) {
-		if (Data.TaskAnswers[task_id]) {
-			Data.TaskAnswers[task_id].yes_or_no = answer;
-		} else {
-			Data.TaskAnswers[task_id] = {
-				yes_or_no: answer
-			};
-		}
-
-		console.log(Data.TaskAnswers);
-		_mithril2.default.redraw();
-	},
-	TaskSetCustomAnswer: function TaskSetCustomAnswer(task_id, answer) {
-		if (Data.TaskAnswers[task_id]) {
-			Data.TaskAnswers[task_id].answer = answer;
-		} else {
-			Data.TaskAnswers[task_id] = {
-				answer: answer
-			};
-		}
-
-		console.log(Data.TaskAnswers);
-		_mithril2.default.redraw();
-	},
-
-	TaskSetUploadedImage: function TaskSetUploadedImage(task_id, image) {
-		if (Data.TaskAnswers[task_id]) {
-			Data.TaskAnswers[task_id].image = image;
-		} else {
-			Data.TaskAnswers[task_id] = {
-				image: image
-			};
-		}
-
-		console.log(Data.TaskAnswers);
-		_mithril2.default.redraw();
-	},
-	GetTaskAnswer: function GetTaskAnswer(task_id) {
-		if (Data.TaskAnswers[task_id]) {
-			return Data.TaskAnswers[task_id];
-		} else {
-			return {};
-		}
-	}
-};
-
-/***/ }),
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2814,7 +2833,7 @@ var _mithril = __webpack_require__(0);
 
 var _mithril2 = _interopRequireDefault(_mithril);
 
-var _data = __webpack_require__(12);
+var _data = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2991,11 +3010,11 @@ var QuestionPage = exports.QuestionPage = {
 								"div",
 								null,
 								(0, _mithril2.default)("input", {
-									type: "text",
+									type: "number",
 									"class": "pa4 bg-dark-gray bt bb b--white tc w-100 white-90",
-									placeholder: "answer eg. 5000m2",
+									placeholder: "progress today eg. 5000",
 									onchange: _mithril2.default.withAttr("value", function (v) {
-										return _data.Data.TaskSetCustomAnswer(data.task_id, v);
+										return _data.Data.TaskSetCustomAnswer(data, v);
 									})
 								})
 							),
@@ -3057,10 +3076,14 @@ var _mithril = __webpack_require__(0);
 
 var _mithril2 = _interopRequireDefault(_mithril);
 
+var _data = __webpack_require__(1);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Completed = exports.Completed = {
+	oncreate: function oncreate() {},
 	view: function view() {
+		var status = _data.Data.GetProjectStatus();
 		return (0, _mithril2.default)(
 			"section",
 			null,
@@ -3082,12 +3105,14 @@ var Completed = exports.Completed = {
 					(0, _mithril2.default)(
 						"span",
 						null,
-						"STATUT: 85%"
+						"STATUT: ",
+						status ? status : 0,
+						"%"
 					)
 				),
 				(0, _mithril2.default)(
 					"a",
-					{ "class": "db link  pa4 bg-dark-red bt bb b--white tc " },
+					{ "class": "db link  pa4 bg-dark-red bt bb b--white tc mv2" },
 					(0, _mithril2.default)(
 						"span",
 						null,
@@ -3096,11 +3121,20 @@ var Completed = exports.Completed = {
 				),
 				(0, _mithril2.default)(
 					"a",
-					{ "class": "db link pa4 bg-gray bt bb b--white tc " },
+					{ "class": "dn link pa4 bg-gray bt bb b--white tc " },
 					(0, _mithril2.default)(
 						"span",
 						null,
 						"Modifier les r\xE9sponses"
+					)
+				),
+				(0, _mithril2.default)(
+					"a",
+					{ "class": "db link pa4 bg-gray bt bb b--white tc mv2 white-90", oncreate: _mithril2.default.route.link, href: "/" },
+					(0, _mithril2.default)(
+						"span",
+						null,
+						"Back to List"
 					)
 				)
 			)
