@@ -19,7 +19,8 @@ export var ListItem = {
 							"bg-dark-red": active
 						})}
 					>
-						<span>{project.project_name}</span>
+						<span>{project.project_name} </span>
+						<div class="pt2">Section: {project.section}</div>
 					</div>
 					<span
 						class={cn("dark-red  absolute frx pt4 ", {
@@ -55,11 +56,8 @@ export var ChooseProject = {
 				<section>
 					{Data.Projects.map(
 						(project, i) =>
-							parseInt(project.section, 10) > 1 ? (
-								""
-							) : (
 								<ListItem project={project} key={i} />
-							)
+
 					)}
 				</section>
 			</section>

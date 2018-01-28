@@ -1,6 +1,6 @@
 import m from "mithril";
 
-const ROOT = `http://www.diduapp.com/m`;
+const ROOT = `https://m.diduapp.com`;
 
 export var Data = {
 	Projects: [],
@@ -12,7 +12,7 @@ export var Data = {
 		return m
 			.request({
 				method: "GET",
-				url: `${ROOT}/projects.php`
+				url: `${ROOT}/api/projects.php`
 			})
 			.then(function(response) {
 				console.table(response);
@@ -24,7 +24,7 @@ export var Data = {
 		return m
 			.request({
 				method: "GET",
-				url: `${ROOT}/tasks.php?project_id=${project_id}`
+				url: `${ROOT}/api/tasks.php?project_id=${project_id}`
 			})
 			.then(function(response) {
 				console.log(response);

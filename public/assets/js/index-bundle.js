@@ -1344,7 +1344,7 @@ var _mithril2 = _interopRequireDefault(_mithril);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ROOT = "http://www.diduapp.com/m";
+var ROOT = "https://m.diduapp.com";
 
 var Data = exports.Data = {
 	Projects: [],
@@ -1355,7 +1355,7 @@ var Data = exports.Data = {
 	GetProjects: function GetProjects() {
 		return _mithril2.default.request({
 			method: "GET",
-			url: ROOT + "/projects.php"
+			url: ROOT + "/api/projects.php"
 		}).then(function (response) {
 			console.table(response);
 			Data.Projects = response;
@@ -1365,7 +1365,7 @@ var Data = exports.Data = {
 		console.log(project_id);
 		return _mithril2.default.request({
 			method: "GET",
-			url: ROOT + "/tasks.php?project_id=" + project_id
+			url: ROOT + "/api/tasks.php?project_id=" + project_id
 		}).then(function (response) {
 			console.log(response);
 			console.table(response);
@@ -2759,7 +2759,14 @@ var ListItem = exports.ListItem = {
 					(0, _mithril2.default)(
 						"span",
 						null,
-						project.project_name
+						project.project_name,
+						" "
+					),
+					(0, _mithril2.default)(
+						"div",
+						{ "class": "pt2" },
+						"Section: ",
+						project.section
 					)
 				),
 				(0, _mithril2.default)(
@@ -2810,7 +2817,7 @@ var ChooseProject = exports.ChooseProject = {
 				"section",
 				null,
 				_data.Data.Projects.map(function (project, i) {
-					return parseInt(project.section, 10) > 1 ? "" : (0, _mithril2.default)(ListItem, { project: project, key: i });
+					return (0, _mithril2.default)(ListItem, { project: project, key: i });
 				})
 			)
 		);
