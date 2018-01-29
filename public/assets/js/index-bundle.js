@@ -1370,6 +1370,10 @@ var Data = exports.Data = {
 			console.log(response);
 			console.table(response);
 			Data.Tasks = response;
+			Data.CurrentTaskIndex = 0;
+			Data.TaskAnswers = {};
+			_mithril2.default.redraw();
+
 			// Data.TaskAnswers = {};
 		});
 	},
@@ -1381,6 +1385,9 @@ var Data = exports.Data = {
 			_mithril2.default.route.set("/question_page/" + project_id + "/completed");
 		}
 		_mithril2.default.redraw();
+	},
+	TasksSave: function TasksSave(project_id) {
+		_mithril2.default.route.set("/question_page/" + project_id + "/completed");
 	},
 	TaskSetBoolAnswer: function TaskSetBoolAnswer(task_id, answer) {
 		if (Data.TaskAnswers[task_id]) {
@@ -1444,6 +1451,23 @@ var Data = exports.Data = {
 		console.log(total_percentages);
 		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
 		return parseInt(total_percentages / Data.TotalTaskItems, 10);
+	},
+	UploadResults: function UploadResults() {
+		console.log(JSON.stringify({
+			TaskAnswers: Data.TaskAnswers,
+			Status: Data.GetProjectStatus()
+		}));
+		return _mithril2.default.request({
+			method: "POST",
+			url: ROOT + "/api/update_tasks.php",
+			data: {
+				TaskAnswers: Data.TaskAnswers,
+				Status: Data.GetProjectStatus()
+			}
+		}).then(function (response) {
+			console.table(response);
+			Data.Projects = response;
+		});
 	}
 };
 
@@ -1552,7 +1576,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var root = document.getElementById("appContainer");
 
-_mithril2.default.route.prefix("");
+_mithril2.default.route.prefix("#!");
 
 _mithril2.default.route(root, "/", {
 	"/": {
@@ -2766,7 +2790,7 @@ var ListItem = exports.ListItem = {
 						"div",
 						{ "class": "pt2" },
 						"Section: ",
-						project.section
+						project.section ? project.section : "none"
 					)
 				),
 				(0, _mithril2.default)(
@@ -2806,11 +2830,11 @@ var ChooseProject = exports.ChooseProject = {
 			null,
 			(0, _mithril2.default)(
 				"div",
-				{ "class": "bg-light-blue pa4 tc" },
+				{ "class": "bg-white pa0 tc" },
 				(0, _mithril2.default)(
 					"span",
 					{ "class": "dark-gray pa2 bg-white f6 dib br2" },
-					"ROUTE ZONE: YOPOUGON"
+					"PROJECTS"
 				)
 			),
 			(0, _mithril2.default)(
@@ -2854,7 +2878,7 @@ var Foot = exports.Foot = {
 			(0, _mithril2.default)(
 				"a",
 				{
-					"class": "dib link w-33 pa3 tc br b--white-50 tc",
+					"class": "dib link w-33 pa3 tc br b--white-50 tc pointer",
 					onclick: function onclick() {
 						return _data.Data.TasksSaveAnswer(attrs.project_id);
 					}
@@ -2868,7 +2892,12 @@ var Foot = exports.Foot = {
 			),
 			(0, _mithril2.default)(
 				"a",
-				{ "class": "link dib w-33 pa3 tc  br b--white-50 tc" },
+				{
+					"class": "link dib w-33 pa3 tc  br b--white-50 tc pointer red",
+					onclick: function onclick() {
+						return _data.Data.TasksSave(attrs.project_id);
+					}
+				},
 				(0, _mithril2.default)("img", { src: "/assets/img/plus.svg", "class": "w2 dib" }),
 				(0, _mithril2.default)(
 					"span",
@@ -2878,7 +2907,7 @@ var Foot = exports.Foot = {
 			),
 			(0, _mithril2.default)(
 				"a",
-				{ "class": "link dib w-33 pa3 tc tc" },
+				{ "class": "link dib w-33 pa3 tc tc red", oncreate: _mithril2.default.route.link, href: "/" },
 				(0, _mithril2.default)("img", { src: "/assets/img/close.svg", "class": "w2 dib" }),
 				(0, _mithril2.default)(
 					"span",
@@ -2928,27 +2957,29 @@ var QuestionPage = exports.QuestionPage = {
 
 		return (0, _mithril2.default)(
 			"section",
-			{ "class": "vh-100" },
+			{ "class": "vh-100 overflow-hidden w-100" },
 			(0, _mithril2.default)(
 				"section",
 				{
-					style: "width:" + filteredData.length * 100 + "%; margin-left:-" + _data.Data.CurrentTaskIndex * 100 + "%"
+					style: "width:" + filteredData.length * 100 + "%; margin-left:-" + _data.Data.CurrentTaskIndex * 100 + "%",
+					"class": "cf overflow-hidden"
 				},
 				filteredData.map(function (data, i) {
 					return (0, _mithril2.default)(
 						"section",
 						{
 							key: i,
-							"class": "dib pb6",
+							"class": "dib pb6 fl v-top h-100",
 							style: "width:" + 100 / filteredData.length + "%"
 						},
 						(0, _mithril2.default)(
 							"div",
-							{ "class": "bg-light-blue pa4 tc" },
+							{ "class": "bg-white pa0 tc" },
 							(0, _mithril2.default)(
 								"span",
 								{ "class": "dark-gray pa2 bg-white f6 dib br2" },
-								"ROUTE ZONE: YOPOUGON"
+								"PROJECT: ",
+								data.project_name
 							)
 						),
 						(0, _mithril2.default)(
@@ -3096,7 +3127,7 @@ var Completed = exports.Completed = {
 			null,
 			(0, _mithril2.default)(
 				"div",
-				{ "class": "bg-light-blue pa4 tc" },
+				{ "class": "bg-white pa0 tc" },
 				(0, _mithril2.default)(
 					"span",
 					{ "class": "dark-gray pa2 bg-white f6 dib br2" },
@@ -3119,7 +3150,12 @@ var Completed = exports.Completed = {
 				),
 				(0, _mithril2.default)(
 					"a",
-					{ "class": "db link  pa4 bg-dark-red bt bb b--white tc mv2" },
+					{
+						"class": "db link  pa4 bg-dark-red bt bb b--white tc mv2",
+						onclick: function onclick() {
+							_data.Data.UploadResults();
+						}
+					},
 					(0, _mithril2.default)(
 						"span",
 						null,
@@ -3137,7 +3173,11 @@ var Completed = exports.Completed = {
 				),
 				(0, _mithril2.default)(
 					"a",
-					{ "class": "db link pa4 bg-gray bt bb b--white tc mv2 white-90", oncreate: _mithril2.default.route.link, href: "/" },
+					{
+						"class": "db link pa4 bg-gray bt bb b--white tc mv2 white-90",
+						oncreate: _mithril2.default.route.link,
+						href: "/"
+					},
 					(0, _mithril2.default)(
 						"span",
 						null,

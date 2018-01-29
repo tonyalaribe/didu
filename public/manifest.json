@@ -1,11 +1,11 @@
 {
-  "name": "Did u",
-  "short_name": "didu",
+  "name": "DIDU",
+  "short_name": "DIDU",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#303030",
   "theme_color": "#303030",
-  "description": "Did u",
+  "description": "DIDU",
   "icons": [{
     "src": "favicon.png",
     "sizes": "48x48",

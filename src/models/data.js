@@ -30,6 +30,10 @@ export var Data = {
 				console.log(response);
 				console.table(response);
 				Data.Tasks = response;
+				Data.CurrentTaskIndex = 0;
+				Data.TaskAnswers = {};
+				m.redraw();
+
 				// Data.TaskAnswers = {};
 			});
 	},
@@ -41,6 +45,9 @@ export var Data = {
 			m.route.set(`/question_page/${project_id}/completed`);
 		}
 		m.redraw();
+	},
+	TasksSave: function(project_id) {
+		m.route.set(`/question_page/${project_id}/completed`);
 	},
 	TaskSetBoolAnswer: function(task_id, answer) {
 		if (Data.TaskAnswers[task_id]) {
@@ -109,5 +116,26 @@ export var Data = {
 		console.log(total_percentages);
 		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
 		return parseInt(total_percentages / Data.TotalTaskItems, 10);
+	},
+	UploadResults: function() {
+		console.log(
+			JSON.stringify({
+				TaskAnswers: Data.TaskAnswers,
+				Status: Data.GetProjectStatus()
+			})
+		);
+		return m
+			.request({
+				method: "POST",
+				url: `${ROOT}/api/update_tasks.php`,
+				data: {
+					TaskAnswers: Data.TaskAnswers,
+					Status: Data.GetProjectStatus()
+				}
+			})
+			.then(function(response) {
+				console.table(response);
+				Data.Projects = response;
+			});
 	}
 };

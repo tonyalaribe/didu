@@ -2,21 +2,24 @@ import m from "mithril";
 import { Data } from "../models/data.js";
 
 export var Foot = {
-	view: function({attrs}) {
+	view: function({ attrs }) {
 		return (
 			<div class="fixed bottom-0 w-100 red bg-dark-gray shadow-4 bt b--white-50">
 				<a
-					class="dib link w-33 pa3 tc br b--white-50 tc"
-					onclick={()=>Data.TasksSaveAnswer(attrs.project_id)}
+					class="dib link w-33 pa3 tc br b--white-50 tc pointer"
+					onclick={() => Data.TasksSaveAnswer(attrs.project_id)}
 				>
 					<img src="/assets/img/check.svg" class="w2 dib" />
 					<span class="db">Ajouter</span>
 				</a>
-				<a class="link dib w-33 pa3 tc  br b--white-50 tc">
+				<a
+					class="link dib w-33 pa3 tc  br b--white-50 tc pointer red"
+					onclick={() => Data.TasksSave(attrs.project_id)}
+				>
 					<img src="/assets/img/plus.svg" class="w2 dib" />
 					<span class="db">Sauver</span>
 				</a>
-				<a class="link dib w-33 pa3 tc tc">
+				<a class="link dib w-33 pa3 tc tc red" oncreate={m.route.link} href="/">
 					<img src="/assets/img/close.svg" class="w2 dib" />
 					<span class="db">Annuler</span>
 				</a>
@@ -55,12 +58,12 @@ export var QuestionPage = {
 			reader.readAsDataURL(file);
 		}
 	},
-	view: function({attrs}) {
+	view: function({ attrs }) {
 		let filteredData = Data.Tasks.filter(v => v.question == "1");
 		Data.TotalTaskItems = filteredData.length;
 
 		return (
-			<section class="vh-100">
+			<section class="vh-100 overflow-hidden w-100">
 				<section
 					style={
 						"width:" +
@@ -69,17 +72,18 @@ export var QuestionPage = {
 						Data.CurrentTaskIndex * 100 +
 						"%"
 					}
+					class="cf overflow-hidden"
 				>
 					{filteredData.map(function(data, i) {
 						return (
 							<section
 								key={i}
-								class="dib pb6"
+								class="dib pb6 fl v-top h-100"
 								style={"width:" + 100 / filteredData.length + "%"}
 							>
-								<div class="bg-light-blue pa4 tc">
+								<div class="bg-white pa0 tc">
 									<span class="dark-gray pa2 bg-white f6 dib br2">
-										ROUTE ZONE: YOPOUGON
+										PROJECT: {data.project_name}
 									</span>
 								</div>
 								<section>
@@ -170,7 +174,7 @@ export var QuestionPage = {
 						);
 					})}
 				</section>
-				<Foot project_id={attrs.project_id}/>
+				<Foot project_id={attrs.project_id} />
 			</section>
 		);
 	}

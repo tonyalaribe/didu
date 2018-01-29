@@ -1,4 +1,4 @@
 :2010 {
   root public
-  rewrite { to {path} {path}/ /index.html }
+  # rewrite { to {path} {path}/ /index.html }
 }

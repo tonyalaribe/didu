@@ -6,7 +6,7 @@ import { Completed } from "./containers/completed.js";
 
 var root = document.getElementById("appContainer");
 
-m.route.prefix("");
+m.route.prefix("#!");
 
 m.route(root, "/", {
 	"/": {

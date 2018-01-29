@@ -20,7 +20,7 @@ export var ListItem = {
 						})}
 					>
 						<span>{project.project_name} </span>
-						<div class="pt2">Section: {project.section}</div>
+						<div class="pt2">Section: {project.section?project.section:"none"}</div>
 					</div>
 					<span
 						class={cn("dark-red  absolute frx pt4 ", {
@@ -48,9 +48,9 @@ export var ChooseProject = {
 	view: function() {
 		return (
 			<section>
-				<div class="bg-light-blue pa4 tc">
+				<div class="bg-white pa0 tc">
 					<span class="dark-gray pa2 bg-white f6 dib br2">
-						ROUTE ZONE: YOPOUGON
+						PROJECTS
 					</span>
 				</div>
 				<section>
