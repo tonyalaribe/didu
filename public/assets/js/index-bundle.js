@@ -1412,9 +1412,16 @@ var Data = exports.Data = {
 			};
 		}
 
-		Data.TaskAnswers[task_id].current_cumulative_value = parseFloat(data.current_cumulative_value) + parseFloat(answer);
-		Data.TaskAnswers[task_id].progress_rate = parseFloat(data.current_cumulative_value) / parseFloat(data.target_value);
+		console.log(data);
+		console.log(answer);
 
+		Data.TaskAnswers[task_id].target_value = data.target_value;
+
+		Data.TaskAnswers[task_id].current_cumulative_value = parseInt(data.current_cumulative_value, 10) + parseInt(answer, 10);
+
+		Data.TaskAnswers[task_id].progress_rate = Data.TaskAnswers[task_id].current_cumulative_value / parseFloat(data.target_value);
+
+		console.log("cumulative val: " + data.current_cumulative_value + " + target_value: " + data.target_value);
 		console.log(Data.TaskAnswers);
 		_mithril2.default.redraw();
 	},
@@ -1442,7 +1449,6 @@ var Data = exports.Data = {
 		var total_percentages = 0;
 		if (Object.keys(Data.TaskAnswers).length > 0) {
 			total_percentages = Object.values(Data.TaskAnswers).reduce(function (previous, data) {
-				console.log(previous);
 				console.log(previous, data);
 				return previous += data.progress_rate;
 			}, 0);
@@ -1450,23 +1456,28 @@ var Data = exports.Data = {
 
 		console.log(total_percentages);
 		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
-		return parseInt(total_percentages / Data.TotalTaskItems, 10);
+
+		return parseFloat(total_percentages / Data.TotalTaskItems).toFixed(2);
 	},
-	UploadResults: function UploadResults() {
+	UploadResults: function UploadResults(project_id) {
 		console.log(JSON.stringify({
+			ProjectID: project_id,
 			TaskAnswers: Data.TaskAnswers,
-			Status: Data.GetProjectStatus()
+			OverallProgress: Data.GetProjectStatus()
 		}));
 		return _mithril2.default.request({
 			method: "POST",
 			url: ROOT + "/api/update_tasks.php",
 			data: {
+				ProjectID: project_id,
 				TaskAnswers: Data.TaskAnswers,
-				Status: Data.GetProjectStatus()
+				OverallProgress: Data.GetProjectStatus()
 			}
 		}).then(function (response) {
 			console.table(response);
 			Data.Projects = response;
+		}).catch(function () {
+			return _mithril2.default.route.set("/");
 		});
 	}
 };
@@ -2104,7 +2115,7 @@ var Head = exports.Head = {
 		console.log(attrs);
 		return (0, _mithril2.default)(
 			"div",
-			{ "class": "pa2 tc shadow-4" },
+			{ "class": "pa2 tc shadow-4 fixed w-100 bg-dark-gray z-3" },
 			(0, _mithril2.default)(
 				"div",
 				{ "class": "dib fl" },
@@ -2166,6 +2177,7 @@ var Shell = exports.Shell = {
 					"class": "white-90 bg-dark-gray vh-100 overflow-scroll bl b--light-gray"
 				},
 				(0, _mithril2.default)(Head, null),
+				(0, _mithril2.default)("div", { "class": "pt4 pb2 mt3" }),
 				children
 			)
 		);
@@ -3120,8 +3132,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Completed = exports.Completed = {
 	oncreate: function oncreate() {},
-	view: function view() {
+	view: function view(_ref) {
+		var attrs = _ref.attrs;
+
 		var status = _data.Data.GetProjectStatus();
+		var project_id = attrs.project_id;
+
 		return (0, _mithril2.default)(
 			"section",
 			null,
@@ -3131,7 +3147,7 @@ var Completed = exports.Completed = {
 				(0, _mithril2.default)(
 					"span",
 					{ "class": "dark-gray pa2 bg-white f6 dib br2" },
-					"VOIE 4-1"
+					"Upload"
 				)
 			),
 			(0, _mithril2.default)(
@@ -3144,7 +3160,7 @@ var Completed = exports.Completed = {
 						"span",
 						null,
 						"STATUT: ",
-						status ? status : 0,
+						status ? status * 100 : 0,
 						"%"
 					)
 				),
@@ -3153,7 +3169,7 @@ var Completed = exports.Completed = {
 					{
 						"class": "db link  pa4 bg-dark-red bt bb b--white tc mv2",
 						onclick: function onclick() {
-							_data.Data.UploadResults();
+							_data.Data.UploadResults(project_id);
 						}
 					},
 					(0, _mithril2.default)(

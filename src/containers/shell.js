@@ -23,7 +23,7 @@ export var Head = {
 	view: function({ attrs }) {
 		console.log(attrs);
 		return (
-			<div class="pa2 tc shadow-4">
+			<div class="pa2 tc shadow-4 fixed w-100 bg-dark-gray z-3">
 				<div class="dib fl">
 					<a class="dib toggle-button">
 						<img src="/assets/img/hamburger-menu.svg" class="w2" />
@@ -62,6 +62,7 @@ export var Shell = {
 					class="white-90 bg-dark-gray vh-100 overflow-scroll bl b--light-gray"
 				>
 					<Head />
+					<div class="pt4 pb2 mt3" />
 					{children}
 				</section>
 			</section>
