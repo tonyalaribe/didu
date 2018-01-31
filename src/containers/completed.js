@@ -13,7 +13,7 @@ export var Completed = {
 				</div>
 				<section>
 					<div class="pa4 bg-dark-gray bt bb b--white tc f2 dark-red">
-						<span>STATUT: {status ? status*100 : 0}%</span>
+						<span>STATUT: {status ? (status * 100).toFixed(2) : 0}%</span>
 					</div>
 					<a
 						class="db link  pa4 bg-dark-red bt bb b--white tc mv2"

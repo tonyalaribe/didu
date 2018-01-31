@@ -1451,7 +1451,7 @@ var Data = exports.Data = {
 			}, 0);
 		}
 
-		return parseFloat(total_percentages / Data.TotalTaskItems).toFixed(2);
+		return parseFloat(total_percentages) / Data.TotalTaskItems;
 	},
 	UploadResults: function UploadResults(project_id) {
 		console.log(JSON.stringify({
@@ -2815,8 +2815,8 @@ var ListItem = exports.ListItem = {
 					(0, _mithril2.default)(
 						"span",
 						null,
-						"Statut: ",
-						parseFloat(project.overall_progress).toFixed(2) * 100,
+						"Statut:\xA0",
+						(parseFloat(project.overall_progress) * 100).toFixed(1),
 						"%"
 					)
 				)
@@ -3153,7 +3153,7 @@ var Completed = exports.Completed = {
 						"span",
 						null,
 						"STATUT: ",
-						status ? status * 100 : 0,
+						status ? (status * 100).toFixed(2) : 0,
 						"%"
 					)
 				),

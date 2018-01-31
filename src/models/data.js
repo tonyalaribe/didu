@@ -122,7 +122,7 @@ export var Data = {
 			);
 		}
 
-		return parseFloat(total_percentages / Data.TotalTaskItems).toFixed(2);
+		return parseFloat(total_percentages) / Data.TotalTaskItems;
 	},
 	UploadResults: function(project_id) {
 		console.log(
