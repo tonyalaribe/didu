@@ -72,9 +72,6 @@ export var Data = {
 			};
 		}
 
-		console.log(data);
-		console.log(answer);
-
 		Data.TaskAnswers[task_id].target_value = data.target_value;
 
 		Data.TaskAnswers[task_id].current_cumulative_value =
@@ -125,9 +122,6 @@ export var Data = {
 			);
 		}
 
-		console.log(total_percentages);
-		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
-
 		return parseFloat(total_percentages / Data.TotalTaskItems).toFixed(2);
 	},
 	UploadResults: function(project_id) {
@@ -149,7 +143,6 @@ export var Data = {
 				}
 			})
 			.then(function(response) {
-				console.table(response);
 				Data.Projects = response;
 			})
 			.catch(() => m.route.set("/"));

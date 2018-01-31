@@ -33,7 +33,7 @@ export var ListItem = {
 					</span>
 
 					<div class="w-30 dib pv4 tc">
-						<span>Statut: {parseFloat(project.overall_progress) * 100}%</span>
+						<span>Statut: {parseFloat(project.overall_progress).toFixed(2) * 100}%</span>
 					</div>
 				</div>
 			</a>

@@ -1412,9 +1412,6 @@ var Data = exports.Data = {
 			};
 		}
 
-		console.log(data);
-		console.log(answer);
-
 		Data.TaskAnswers[task_id].target_value = data.target_value;
 
 		Data.TaskAnswers[task_id].current_cumulative_value = parseInt(data.current_cumulative_value, 10) + parseInt(answer, 10);
@@ -1454,9 +1451,6 @@ var Data = exports.Data = {
 			}, 0);
 		}
 
-		console.log(total_percentages);
-		console.log(parseFloat(Object.values(Data.TaskAnswers).length));
-
 		return parseFloat(total_percentages / Data.TotalTaskItems).toFixed(2);
 	},
 	UploadResults: function UploadResults(project_id) {
@@ -1474,7 +1468,6 @@ var Data = exports.Data = {
 				OverallProgress: Data.GetProjectStatus()
 			}
 		}).then(function (response) {
-			console.table(response);
 			Data.Projects = response;
 		}).catch(function () {
 			return _mithril2.default.route.set("/");
@@ -2823,7 +2816,7 @@ var ListItem = exports.ListItem = {
 						"span",
 						null,
 						"Statut: ",
-						parseFloat(project.overall_progress) * 100,
+						parseFloat(project.overall_progress).toFixed(2) * 100,
 						"%"
 					)
 				)
