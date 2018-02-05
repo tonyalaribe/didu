@@ -4,7 +4,6 @@ import { Data } from "../models/data.js";
 
 export var ListItem = {
 	view: function(vnode) {
-		console.log(vnode);
 		let { active, project } = vnode.attrs;
 		return (
 			<a

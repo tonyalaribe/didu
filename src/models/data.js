@@ -115,7 +115,7 @@ export var Data = {
 		if (Object.keys(Data.TaskAnswers).length > 0) {
 			total_percentages = Object.values(Data.TaskAnswers).reduce(
 				(previous, data) => {
-					console.log(previous, data);
+					// console.log(previous, data);
 					return (previous += data.progress_rate);
 				},
 				0
@@ -125,6 +125,11 @@ export var Data = {
 		return parseFloat(total_percentages) / Data.TotalTaskItems;
 	},
 	UploadResults: function(project_id) {
+		console.log({
+			ProjectID: project_id,
+			TaskAnswers: Data.TaskAnswers,
+			OverallProgress: Data.GetProjectStatus()
+		});
 		console.log(
 			JSON.stringify({
 				ProjectID: project_id,

@@ -1446,7 +1446,7 @@ var Data = exports.Data = {
 		var total_percentages = 0;
 		if (Object.keys(Data.TaskAnswers).length > 0) {
 			total_percentages = Object.values(Data.TaskAnswers).reduce(function (previous, data) {
-				console.log(previous, data);
+				// console.log(previous, data);
 				return previous += data.progress_rate;
 			}, 0);
 		}
@@ -1454,6 +1454,11 @@ var Data = exports.Data = {
 		return parseFloat(total_percentages) / Data.TotalTaskItems;
 	},
 	UploadResults: function UploadResults(project_id) {
+		console.log({
+			ProjectID: project_id,
+			TaskAnswers: Data.TaskAnswers,
+			OverallProgress: Data.GetProjectStatus()
+		});
 		console.log(JSON.stringify({
 			ProjectID: project_id,
 			TaskAnswers: Data.TaskAnswers,
@@ -2762,7 +2767,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var ListItem = exports.ListItem = {
 	view: function view(vnode) {
-		console.log(vnode);
 		var _vnode$attrs = vnode.attrs,
 		    active = _vnode$attrs.active,
 		    project = _vnode$attrs.project;
